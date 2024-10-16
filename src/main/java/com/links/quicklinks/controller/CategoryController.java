@@ -26,7 +26,7 @@ public class CategoryController {
 
         categoryService.addCategory(categoryDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
