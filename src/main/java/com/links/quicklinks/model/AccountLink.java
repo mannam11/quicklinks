@@ -24,5 +24,5 @@ public class AccountLink {
     private String url;
     private Category category;
     private LocalDateTime createdAt;
-    private Long updatedAt;
+    private String userId;
 }

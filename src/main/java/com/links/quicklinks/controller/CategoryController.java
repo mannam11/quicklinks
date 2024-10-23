@@ -1,6 +1,6 @@
 package com.links.quicklinks.controller;
 
-import com.links.quicklinks.dto.CategoryDto;
+import com.links.quicklinks.dto.response.CategoryResponse;
 import com.links.quicklinks.model.Category;
 import com.links.quicklinks.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> createCategory(@RequestBody CategoryResponse categoryDto) {
 
         if(categoryDto == null || categoryDto.name().trim().isEmpty()){
             throw new RuntimeException("Category name cannot be empty");
@@ -30,11 +30,11 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
 
         List<Category> categories = categoryService.getCategories();
 
-        List<CategoryDto> categoryDtos = categories.stream().map(CategoryDto::fromCategory).toList();
+        List<CategoryResponse> categoryDtos = categories.stream().map(CategoryResponse::fromCategory).toList();
 
         return new ResponseEntity<>(categoryDtos, HttpStatus.OK);
     }
