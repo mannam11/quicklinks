@@ -1,10 +1,11 @@
 package com.links.quicklinks.service;
 
-import com.links.quicklinks.dto.AccountLinkRequest;
+import com.links.quicklinks.dto.request.AccountLinkRequest;
 import com.links.quicklinks.model.AccountLink;
 import com.links.quicklinks.model.Category;
 import com.links.quicklinks.repository.AccountLinkRepository;
 import com.links.quicklinks.repository.CategoryRepository;
+import com.links.quicklinks.utils.CurrentUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class AccountLinkServiceImpl implements AccountLinkService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private CurrentUserDetails currentUser;
+
     @Override
     public void addAccountLink(AccountLinkRequest accountLinkRequest) {
 
@@ -36,7 +40,7 @@ public class AccountLinkServiceImpl implements AccountLinkService {
                 .url(accountLinkRequest.url())
                 .title(accountLinkRequest.title())
                 .category(category)
-                .updatedAt(Instant.now().getEpochSecond())
+                .userId(currentUser.getCurrentUser().getId())
                 .build();
 
         accountLinkRepository.save(accountLink).subscribe();

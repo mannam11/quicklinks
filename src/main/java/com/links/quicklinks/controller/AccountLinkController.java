@@ -1,9 +1,10 @@
 package com.links.quicklinks.controller;
 
-import com.links.quicklinks.dto.AccountLinkRequest;
-import com.links.quicklinks.dto.AccountLinkResponse;
+import com.links.quicklinks.dto.request.AccountLinkRequest;
+import com.links.quicklinks.dto.response.AccountLinkResponse;
 import com.links.quicklinks.model.AccountLink;
 import com.links.quicklinks.service.AccountLinkService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/link")
+@Slf4j
 public class AccountLinkController {
 
     @Autowired
@@ -21,6 +23,7 @@ public class AccountLinkController {
     @PostMapping
     public ResponseEntity<?> createAccountLink(@RequestBody AccountLinkRequest accountLinkRequest) {
 
+        log.info("Validating account link : {}", accountLinkRequest);
         if (accountLinkRequest == null || accountLinkRequest.url().trim().isEmpty() || accountLinkRequest.title().trim().isEmpty()) {
             return new ResponseEntity<>("Title or Url can't be empty", HttpStatus.BAD_REQUEST);
         }
