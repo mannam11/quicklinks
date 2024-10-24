@@ -1,11 +1,23 @@
 package com.links.quicklinks.dto.response;
 
 import com.links.quicklinks.model.AccountLink;
+import lombok.Builder;
+import lombok.Data;
 
-public record AccountLinkResponse(String id,String title, String url, String categoryName) {
+@Data
+@Builder
+public class AccountLinkResponse {
+    private String id;
+    private String title;
+    private String url;
+    private String category;
 
     public static AccountLinkResponse from(AccountLink accountLink) {
-        return new AccountLinkResponse(accountLink.getId(),accountLink.getTitle(), accountLink.getUrl(), accountLink.getCategory().getName());
+        return AccountLinkResponse.builder()
+                .id(accountLink.getId())
+                .title(accountLink.getTitle())
+                .url(accountLink.getUrl())
+                .category(accountLink.getCategory())
+                .build();
     }
-
 }

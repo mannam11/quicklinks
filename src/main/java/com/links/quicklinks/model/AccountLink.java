@@ -22,7 +22,7 @@ public class AccountLink {
     private String id;
     private String title;
     private String url;
-    private Category category;
+    private String category;
     private LocalDateTime createdAt;
     private String userId;
 }

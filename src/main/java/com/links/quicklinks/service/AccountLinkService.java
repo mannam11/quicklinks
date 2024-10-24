@@ -8,6 +8,6 @@ import java.util.List;
 public interface AccountLinkService {
     public void addAccountLink(AccountLinkRequest accountLinkRequest);
 
-    public List<AccountLink> getAllAccountLinks();
+    public List<AccountLink> getAllAccountLinks(String userId);
 }
 

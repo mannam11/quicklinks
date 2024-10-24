@@ -8,4 +8,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
     public SignupResponse save(SignupRequest signupRequest);
     public User findByEmail(String email) ;
+    public User findByUsername(String username) ;
 }
