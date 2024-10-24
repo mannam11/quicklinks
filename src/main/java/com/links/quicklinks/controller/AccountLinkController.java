@@ -59,6 +59,7 @@ public class AccountLinkController {
         List<AccountLinkResponse> accountLinkResponses = accountLinks.stream()
                 .map(AccountLinkResponse::from).toList();
 
+        log.info("Getting all accountLinks fom user {}", user.getEmail());
         return new ResponseEntity<>(accountLinkResponses, HttpStatus.OK);
     }
 }
