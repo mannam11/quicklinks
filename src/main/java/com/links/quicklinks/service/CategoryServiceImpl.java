@@ -1,6 +1,6 @@
 package com.links.quicklinks.service;
 
-import com.links.quicklinks.dto.response.CategoryResponse;
+import com.links.quicklinks.dto.CategoryDTO;
 import com.links.quicklinks.model.Category;
 import com.links.quicklinks.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +23,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void addCategory(CategoryResponse categoryDto) {
+    public void addCategory(CategoryDTO categoryDto) {
 
         Category category = Category.builder()
-                .name(categoryDto.name())
+                .name(categoryDto.getName())
                 .build();
 
         categoryRepository.save(category).subscribe();
+        log.info("Added category: {}", category.getName());
+    }
+
+    @Override
+    public Category getCategoryByName(String categoryName) {
+        return categoryRepository.findByName(categoryName).block();
     }
 }

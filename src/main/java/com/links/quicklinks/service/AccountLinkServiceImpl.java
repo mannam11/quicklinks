@@ -2,15 +2,12 @@ package com.links.quicklinks.service;
 
 import com.links.quicklinks.dto.request.AccountLinkRequest;
 import com.links.quicklinks.model.AccountLink;
-import com.links.quicklinks.model.Category;
 import com.links.quicklinks.repository.AccountLinkRepository;
-import com.links.quicklinks.repository.CategoryRepository;
 import com.links.quicklinks.utils.CurrentUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -21,33 +18,26 @@ public class AccountLinkServiceImpl implements AccountLinkService {
     private AccountLinkRepository accountLinkRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private CurrentUserDetails currentUser;
+    private CurrentUserDetails currentUserDetails;
 
     @Override
     public void addAccountLink(AccountLinkRequest accountLinkRequest) {
 
-        log.info("Fetching category by name {}",accountLinkRequest.categoryName());
-        Category category = categoryRepository.findByName(accountLinkRequest.categoryName()).block();
-
-        if(category == null) {
-            throw new RuntimeException("Invalid category");
-        }
-
         AccountLink accountLink = AccountLink.builder()
-                .url(accountLinkRequest.url())
-                .title(accountLinkRequest.title())
-                .category(category)
-                .userId(currentUser.getCurrentUser().getId())
+                .url(accountLinkRequest.getUrl())
+                .title(accountLinkRequest.getTitle())
+                .category(accountLinkRequest.getCategoryName())
+                .userId(currentUserDetails.getCurrentUser().getId())
                 .build();
 
-        accountLinkRepository.save(accountLink).subscribe();
+        log.info("Added account link for userId: {}", accountLink.getUserId());
+
+        accountLinkRepository.save(accountLink).block();
+        log.info("Account link added for user with email : {}",currentUserDetails.getCurrentUser().getEmail());
     }
 
     @Override
-    public List<AccountLink> getAllAccountLinks() {
-        return accountLinkRepository.findAll().collectList().block();
+    public List<AccountLink> getAllAccountLinks(String userId) {
+        return accountLinkRepository.findAllByUserId(userId).collectList().block();
     }
 }

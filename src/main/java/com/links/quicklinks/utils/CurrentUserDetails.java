@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CurrentUserDetails {
 
-    public Authentication getCurrentUserAuthentication() {
+    private Authentication getCurrentUserAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 

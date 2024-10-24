@@ -1,14 +1,21 @@
 package com.links.quicklinks.controller;
 
 import com.links.quicklinks.dto.request.AccountLinkRequest;
+import com.links.quicklinks.dto.request.GetLinksRequest;
 import com.links.quicklinks.dto.response.AccountLinkResponse;
 import com.links.quicklinks.model.AccountLink;
+import com.links.quicklinks.model.Category;
+import com.links.quicklinks.model.User;
 import com.links.quicklinks.service.AccountLinkService;
+import com.links.quicklinks.service.CategoryService;
+import com.links.quicklinks.service.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,31 +27,37 @@ public class AccountLinkController {
     @Autowired
     private AccountLinkService accountLinkService;
 
-    @PostMapping
-    public ResponseEntity<?> createAccountLink(@RequestBody AccountLinkRequest accountLinkRequest) {
+    @Autowired
+    private CategoryService categoryService;
 
-        log.info("Validating account link : {}", accountLinkRequest);
-        if (accountLinkRequest == null || accountLinkRequest.url().trim().isEmpty() || accountLinkRequest.title().trim().isEmpty()) {
-            return new ResponseEntity<>("Title or Url can't be empty", HttpStatus.BAD_REQUEST);
+    @Autowired
+    private UserService userService;
+
+    @PostMapping
+    public ResponseEntity<?> createAccountLink(@Valid @RequestBody AccountLinkRequest accountLinkRequest) {
+
+        Category category = categoryService.getCategoryByName(accountLinkRequest.getCategoryName());
+        if(category == null) {
+            throw new RuntimeException("Invalid Category");
         }
 
         accountLinkService.addAccountLink(accountLinkRequest);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @GetMapping
-    public ResponseEntity<?> getAllAccountLinks() {
+    public ResponseEntity<?> getAllAccountLinks(@RequestBody GetLinksRequest getLinksRequest) {
 
-        List<AccountLink> accountLinks = accountLinkService.getAllAccountLinks();
+        User user = userService.findByUsername(getLinksRequest.getUsername());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<AccountLink> accountLinks = accountLinkService.getAllAccountLinks(user.getId());
 
         List<AccountLinkResponse> accountLinkResponses = accountLinks.stream()
                 .map(AccountLinkResponse::from).toList();
-
-        if (accountLinkResponses.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
 
         return new ResponseEntity<>(accountLinkResponses, HttpStatus.OK);
     }
