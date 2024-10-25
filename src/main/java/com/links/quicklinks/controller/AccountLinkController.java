@@ -1,7 +1,6 @@
 package com.links.quicklinks.controller;
 
 import com.links.quicklinks.dto.request.AccountLinkRequest;
-import com.links.quicklinks.dto.request.GetLinksRequest;
 import com.links.quicklinks.dto.response.AccountLinkResponse;
 import com.links.quicklinks.model.AccountLink;
 import com.links.quicklinks.model.Category;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
