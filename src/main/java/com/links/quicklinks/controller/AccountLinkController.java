@@ -47,9 +47,9 @@ public class AccountLinkController {
 
 
     @GetMapping
-    public ResponseEntity<?> getAllAccountLinks(@RequestBody GetLinksRequest getLinksRequest) {
+    public ResponseEntity<?> getAllAccountLinks(@RequestParam String username) {
 
-        User user = userService.findByUsername(getLinksRequest.getUsername());
+        User user = userService.findByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
