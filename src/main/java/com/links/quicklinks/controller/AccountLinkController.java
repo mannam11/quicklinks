@@ -54,7 +54,14 @@ public class AccountLinkController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        List<AccountLink> accountLinks = accountLinkService.getAllAccountLinks(user.getId());
+        List<AccountLink> accountLinks = null;
+
+        try {
+            accountLinks = accountLinkService.getAllAccountLinks(user.getId());
+        } catch (Exception e) {
+            log.error("Error retrieving account links for user {}: {}", user.getEmail(), e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         List<AccountLinkResponse> accountLinkResponses = accountLinks.stream()
                 .map(AccountLinkResponse::from).toList();
